@@ -1,9 +1,9 @@
 import os
 import hashlib
 
-from manimlib.constants import TEX_DIR
 from manimlib.constants import TEX_TEXT_TO_REPLACE
 from manimlib.constants import TEX_USE_CTEX
+import manimlib.constants as consts
 
 
 def tex_hash(expression, template_tex_file_body):
@@ -22,7 +22,7 @@ def tex_to_svg_file(expression, template_tex_file_body):
 
 def generate_tex_file(expression, template_tex_file_body):
     result = os.path.join(
-        TEX_DIR,
+        consts.TEX_DIR,
         tex_hash(expression, template_tex_file_body)
     ) + ".tex"
     if not os.path.exists(result):
@@ -32,15 +32,9 @@ def generate_tex_file(expression, template_tex_file_body):
         new_body = template_tex_file_body.replace(
             TEX_TEXT_TO_REPLACE, expression
         )
-        with open(result, "w") as outfile:
+        with open(result, "w", encoding="utf-8") as outfile:
             outfile.write(new_body)
     return result
-
-
-def get_null():
-    if os.name == "nt":
-        return "NUL"
-    return "/dev/null"
 
 
 def tex_to_dvi(tex_file):
@@ -50,19 +44,19 @@ def tex_to_dvi(tex_file):
             "latex",
             "-interaction=batchmode",
             "-halt-on-error",
-            "-output-directory=" + TEX_DIR,
-            tex_file,
+            "-output-directory=\"{}\"".format(consts.TEX_DIR),
+            "\"{}\"".format(tex_file),
             ">",
-            get_null()
+            os.devnull
         ] if not TEX_USE_CTEX else [
             "xelatex",
             "-no-pdf",
             "-interaction=batchmode",
             "-halt-on-error",
-            "-output-directory=" + TEX_DIR,
-            tex_file,
+            "-output-directory=\"{}\"".format(consts.TEX_DIR),
+            "\"{}\"".format(tex_file),
             ">",
-            get_null()
+            os.devnull
         ]
         exit_code = os.system(" ".join(commands))
         if exit_code != 0:
@@ -85,14 +79,14 @@ def dvi_to_svg(dvi_file, regen_if_exists=False):
     if not os.path.exists(result):
         commands = [
             "dvisvgm",
-            dvi_file,
+            "\"{}\"".format(dvi_file),
             "-n",
             "-v",
             "0",
             "-o",
-            result,
+            "\"{}\"".format(result),
             ">",
-            get_null()
+            os.devnull
         ]
         os.system(" ".join(commands))
     return result
