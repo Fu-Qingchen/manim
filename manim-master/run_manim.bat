@@ -1,0 +1,1 @@
+python -m manim active_projects\Science3Mins.py Gird -pl
