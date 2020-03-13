@@ -1,16 +1,15 @@
 from manimlib.imports import *
 # import scipy
 
-
 class FourierCirclesScene(Scene):
     CONFIG = {
         "n_vectors": 10,
         "big_radius": 2,
         "colors": [
-            BLUE_D,
-            BLUE_C,
-            BLUE_E,
-            GREY_BROWN,
+            "#f29f00",
+            "#f29f00",
+            "#f29f00",
+            "#f29f00",
         ],
         "circle_style": {
             "stroke_width": 2,
@@ -89,7 +88,7 @@ class FourierCirclesScene(Scene):
         return vectors
 
     def get_rotating_vector(self, coefficient, freq, center_func):
-        vector = Vector(RIGHT, **self.vector_config)
+        vector = Vector(RIGHT, **self.vector_config, color = "#d28e7f")
         vector.scale(abs(coefficient))
         if abs(coefficient) == 0:
             phase = 0
@@ -176,7 +175,7 @@ class FourierCirclesScene(Scene):
                 if b < 0:
                     width = 0
                 else:
-                    width = stroke_width * (1 - (b % 1))
+                    width = stroke_width #* (1 - (b % 1))
                 sp.set_stroke(width=width)
             path.curr_time += dt
             return path
@@ -339,7 +338,7 @@ class FourierOfPiSymbol(FourierCirclesScene):
         if self.start_drawn:
             self.vector_clock.increment_value(1)
 
-        self.add(path)
+        # self.add(path)
         self.add(vectors)
         self.add(circles)
         self.add(drawn_path)
@@ -370,7 +369,6 @@ class FourierOfPiSymbol(FourierCirclesScene):
         path.set_fill(opacity=0)
         path.set_stroke(WHITE, 1)
         return path
-
 
 class FourierOfName(FourierOfPiSymbol, MovingCameraScene):
     CONFIG = {
@@ -452,10 +450,10 @@ class FourierOfPiSymbol5(FourierOfPiSymbol):
 
 class FourierOfTrebleClef(FourierOfPiSymbol):
     CONFIG = {
-        "n_vectors": 101,
+        "n_vectors": 250,
         "run_time": 10,
-        "start_drawn": True,
-        "file_name": "TrebleClef",
+        # "start_drawn": False,
+        "file_name": "mouse",
         "height": 7.5,
     }
 
@@ -474,9 +472,9 @@ class FourierOfTrebleClef(FourierOfPiSymbol):
 
 class FourierOfIP(FourierOfTrebleClef):
     CONFIG = {
-        "file_name": "IP_logo2",
+        "file_name": "mouse",
         "height": 6,
-        "n_vectors": 100,
+        "n_vectors": 250,
     }
 
     # def construct(self):

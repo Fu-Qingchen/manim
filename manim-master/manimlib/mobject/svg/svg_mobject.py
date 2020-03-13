@@ -56,6 +56,7 @@ class SVGMobject(VMobject):
             self.file_name,
         ]
         for path in possible_paths:
+            print(path)
             if os.path.exists(path):
                 self.file_path = path
                 return

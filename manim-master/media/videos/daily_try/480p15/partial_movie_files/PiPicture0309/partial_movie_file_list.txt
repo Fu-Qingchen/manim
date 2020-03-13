@@ -1,0 +1,7 @@
+file 'E:/GitHub/manim/manim-master/media/videos/daily_try/480p15/partial_movie_files/PiPicture0309/00000.mp4'
+file 'E:/GitHub/manim/manim-master/media/videos/daily_try/480p15/partial_movie_files/PiPicture0309/00001.mp4'
+file 'E:/GitHub/manim/manim-master/media/videos/daily_try/480p15/partial_movie_files/PiPicture0309/00002.mp4'
+file 'E:/GitHub/manim/manim-master/media/videos/daily_try/480p15/partial_movie_files/PiPicture0309/00003.mp4'
+file 'E:/GitHub/manim/manim-master/media/videos/daily_try/480p15/partial_movie_files/PiPicture0309/00004.mp4'
+file 'E:/GitHub/manim/manim-master/media/videos/daily_try/480p15/partial_movie_files/PiPicture0309/00005.mp4'
+file 'E:/GitHub/manim/manim-master/media/videos/daily_try/480p15/partial_movie_files/PiPicture0309/00006.mp4'

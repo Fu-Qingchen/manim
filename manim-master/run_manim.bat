@@ -1,1 +1,1 @@
-python -m manim active_projects\Science3Mins.py Gird -pl
+python -m manim active_projects\Interpolation.py  -pal

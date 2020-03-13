@@ -1,0 +1,4 @@
+file 'E:/GitHub/manim/manim-master/media/videos/have_fun/480p15/partial_movie_files/SimpleCosExpGraph/00000.mp4'
+file 'E:/GitHub/manim/manim-master/media/videos/have_fun/480p15/partial_movie_files/SimpleCosExpGraph/00001.mp4'
+file 'E:/GitHub/manim/manim-master/media/videos/have_fun/480p15/partial_movie_files/SimpleCosExpGraph/00002.mp4'
+file 'E:/GitHub/manim/manim-master/media/videos/have_fun/480p15/partial_movie_files/SimpleCosExpGraph/00003.mp4'

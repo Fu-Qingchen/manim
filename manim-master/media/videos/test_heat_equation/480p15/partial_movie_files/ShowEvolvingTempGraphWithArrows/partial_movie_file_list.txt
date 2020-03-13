@@ -1,0 +1,1 @@
+file 'E:/GitHub/manim/manim-master/media/videos/test_heat_equation/480p15/partial_movie_files/ShowEvolvingTempGraphWithArrows/00000.mp4'

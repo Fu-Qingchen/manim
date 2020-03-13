@@ -1,6 +1,6 @@
 from manimlib.imports import *
 
-from active_projects.diffyq.part4.fourier_series_scenes import ComplexFourierSeriesExample
+from from_3b1b.active.diffyq.part4.fourier_series_scenes import ComplexFourierSeriesExample
 from manimlib.once_useful_constructs.fractals import HilbertCurve
 
 
@@ -9,7 +9,7 @@ class FourierSeriesExampleWithRectForZoom(ComplexFourierSeriesExample):
         "n_vectors": 100,
         "slow_factor": 0.01,
         "rect_scale_factor": 0.1,
-        "start_drawn": True,
+        "start_drawn": False,
         "drawing_height": 7,
         "rect_stroke_width": 1,
     }

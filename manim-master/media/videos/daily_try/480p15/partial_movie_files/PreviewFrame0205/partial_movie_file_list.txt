@@ -1,0 +1,5 @@
+file 'E:/GitHub/manim/manim-master/media/videos/daily_try/480p15/partial_movie_files/PreviewFrame0205/00000.mp4'
+file 'E:/GitHub/manim/manim-master/media/videos/daily_try/480p15/partial_movie_files/PreviewFrame0205/00001.mp4'
+file 'E:/GitHub/manim/manim-master/media/videos/daily_try/480p15/partial_movie_files/PreviewFrame0205/00002.mp4'
+file 'E:/GitHub/manim/manim-master/media/videos/daily_try/480p15/partial_movie_files/PreviewFrame0205/00003.mp4'
+file 'E:/GitHub/manim/manim-master/media/videos/daily_try/480p15/partial_movie_files/PreviewFrame0205/00004.mp4'

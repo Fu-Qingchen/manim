@@ -148,24 +148,6 @@ class Gimbal(VGroup):
 
 # Scenes
 
-class ButFirst(TeacherStudentsScene):
-    def construct(self):
-        for student in self.students:
-            student.change("surprised")
-
-        self.teacher_says("But first!")
-        self.change_all_student_modes("happy")
-        self.play(RemovePiCreatureBubble(
-            self.teacher,
-            target_mode="raise_right_hand"
-        ))
-        self.change_student_modes(
-            *["pondering"] * 3,
-            look_at_arg=self.screen,
-        )
-        self.play(self.teacher.look_at, self.screen)
-        self.wait(4)
-
 
 class Introduction(QuaternionHistory):
     CONFIG = {
@@ -231,133 +213,6 @@ class Introduction(QuaternionHistory):
                 for mob, vect in zip(pair, [LEFT, RIGHT])
             ],
         )
-
-
-class WhoCares(TeacherStudentsScene):
-    def construct(self):
-        quotes = Group(*[
-            ImageMobject(
-                "CoderQuaternionResponse_{}".format(d),
-                height=2
-            )
-            for d in range(4)
-        ])
-        logos = Group(*[
-            ImageMobject(name, height=0.5)
-            for name in [
-                "TwitterLogo",
-                "HackerNewsLogo",
-                "RedditLogo",
-                "YouTubeLogo",
-            ]
-        ])
-        for quote, logo in zip(quotes, logos):
-            logo.move_to(quote.get_corner(UR))
-            quote.add(logo)
-
-        quotes.arrange_in_grid()
-        quotes.set_height(4)
-        quotes.to_corner(UL)
-
-        self.student_says(
-            "Um...who cares?",
-            target_mode="sassy",
-            added_anims=[self.teacher.change, "guilty"]
-        )
-        self.change_student_modes("angry", "sassy", "sad")
-        self.wait(2)
-        self.play(
-            RemovePiCreatureBubble(self.students[1]),
-            self.teacher.change, "raise_right_hand"
-        )
-        # self.play(
-        #     LaggedStartMap(
-        #         FadeInFromDown, quotes,
-        #         run_time=3
-        #     ),
-        #     self.get_student_changes(*3 * ["pondering"], look_at_arg=quotes)
-        # )
-        # self.wait(2)
-
-        # # Show HN
-        # hn_quote = quotes[1]
-        # hn_context = TextMobject("news.ycombinator.com/item?id=17933908")
-        # hn_context.scale(0.7)
-        # hn_context.to_corner(UL)
-
-        # vr_headsets = VGroup()
-        # for pi in self.students:
-        #     vr_headset = SVGMobject("VR_headset")
-        #     vr_headset.set_fill(LIGHT_GREY, opacity=0.9)
-        #     vr_headset.set_width(pi.eyes.get_width() + 0.3)
-        #     vr_headset.move_to(pi.eyes)
-        #     vr_headsets.add(vr_headset)
-
-        # self.play(
-        #     hn_quote.scale, 2, {"about_edge": DL},
-        #     FadeOutAndShift(quotes[0], 5 * UP),
-        #     FadeOutAndShift(quotes[2], UR),
-        #     FadeOutAndShift(quotes[3], RIGHT),
-        #     FadeInFromDown(hn_context),
-        # )
-        # hn_rect = Rectangle(
-        #     height=0.1 * hn_quote.get_height(),
-        #     width=0.6 * hn_quote.get_width(),
-        #     color=RED
-        # )
-        # hn_rect.move_to(hn_quote, UL)
-        # hn_rect.shift(0.225 * RIGHT + 0.75 * DOWN)
-        # self.play(
-        #     ShowCreation(hn_rect),
-        #     self.get_student_changes(
-        #         "erm", "thinking", "confused",
-        #         look_at_arg=hn_quote,
-        #     )
-        # )
-        # self.add_foreground_mobjects(vr_headsets)
-        # self.play(
-        #     LaggedStartMap(
-        #         FadeInFrom, vr_headsets,
-        #         lambda m: (m, UP),
-        #     ),
-        #     self.get_student_changes(
-        #         *3 * ["sick"],
-        #         look_at_arg=hn_quote,
-        #         run_time=3
-        #     )
-        # )
-        # self.wait(3)
-
-        # Show Twitter
-        t_quote = quotes[0]
-        # t_quote.next_to(FRAME_WIDTH * LEFT / 2 + FRAME_WIDTH * UP / 2, UR)
-        # t_quote.set_opacity(0)
-        # self.play(
-        #     FadeOutAndShift(hn_quote, 4 * LEFT),
-        #     FadeOutAndShift(hn_rect, 4 * LEFT),
-        #     FadeOutAndShift(hn_context, UP),
-        #     FadeOut(vr_headsets),
-        #     t_quote.set_opacity, 1,
-        #     t_quote.scale, 2,
-        #     t_quote.to_corner, UL,
-        # )
-        # self.remove_foreground_mobjects(vr_headsets)
-        t_quote.fade(1)
-        t_quote.to_corner(UL)
-        self.play(
-            self.get_student_changes(*3 * ["pondering"], look_at_arg=quotes),
-            t_quote.set_opacity, 1,
-            t_quote.scale, 2,
-            t_quote.to_corner, UL,
-        )
-        self.wait(2)
-        self.change_student_modes(
-            "pondering", "happy", "tease",
-            look_at_arg=t_quote
-        )
-        self.wait(2)
-        self.play(FadeOut(t_quote))
-        self.wait(5)
 
 
 class ShowSeveralQuaternionRotations(SpecialThreeDScene):
@@ -857,36 +712,6 @@ class QuaternionInterpolationScematic(Scene):
             self.wait(2)
 
 
-class RememberComplexNumbers(TeacherStudentsScene):
-    def construct(self):
-        complex_number = TexMobject(
-            "\\cos(\\theta) + \\sin(\\theta)i",
-            tex_to_color_map={
-                "\\cos(\\theta)": GREEN,
-                "\\sin(\\theta)": RED
-            }
-        )
-        complex_number.scale(1.2)
-        complex_number.next_to(self.students, UP, MED_LARGE_BUFF)
-
-        self.teacher_says(
-            "Remember how \\\\ complex numbers \\\\ compute rotations"
-        )
-        self.change_all_student_modes("pondering")
-        self.wait()
-        self.play(
-            FadeInFromDown(complex_number),
-            self.get_student_changes(
-                "thinking", "confused", "happy",
-                look_at_arg=complex_number.get_center() + UP
-            ),
-            run_time=2
-        )
-        self.change_student_modes(
-        )
-        self.wait(5)
-
-
 class ComplexNumberRotation(Scene):
     CONFIG = {
         "angle": 30 * DEGREES,
@@ -1335,54 +1160,6 @@ class RuleForQuaternionRotations(EulerAnglesAndGimbal):
         result.arrange(RIGHT, buff=SMALL_BUFF)
         result.scale(0.7)
         return result
-
-
-class ExpandOutFullProduct(TeacherStudentsScene):
-    def construct(self):
-        product = TexMobject(
-            """
-            (w_0 + x_0 i + y_0 j + z_0 k)
-            (x_1 i + y_1 j + z_1 k)
-            (w_0 - x_0 i - y_0 j - z_0 k)
-            """,
-            tex_to_color_map={
-                "w_0": W_COLOR, "(": WHITE, ")": WHITE,
-                "x_0": I_COLOR, "y_0": J_COLOR, "z_0": K_COLOR,
-                "x_1": I_COLOR, "y_1": J_COLOR, "z_1": K_COLOR,
-            }
-        )
-        product.set_width(FRAME_WIDTH - 1)
-        product.to_edge(UP)
-
-        n = 10
-        q_brace = Brace(product[:n], DOWN)
-        p_brace = Brace(product[n:-n], DOWN)
-        q_inv_brace = Brace(product[-n:], DOWN)
-        braces = VGroup(q_brace, p_brace, q_inv_brace)
-        for brace, tex in zip(braces, ["q", "p", "q^{-1}"]):
-            brace.add(brace.get_tex(tex))
-
-        words = TextMobject("= Rotation of $p$")
-        words.next_to(braces, DOWN)
-
-        self.play(
-            self.teacher.change, "raise_right_hand",
-            FadeInFromDown(product)
-        )
-        self.play(
-            LaggedStartMap(GrowFromCenter, braces),
-            self.get_student_changes(
-                "confused", "horrified", "confused"
-            )
-        )
-        self.wait(2)
-        self.play(Write(words))
-        self.change_student_modes(
-            "pondering", "confused", "erm",
-            look_at_arg=words
-        )
-        self.wait(5)
-
 
 class Link(Scene):
     def construct(self):

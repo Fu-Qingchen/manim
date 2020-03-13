@@ -1,0 +1,8 @@
+file 'E:/GitHub/manim/manim-master/media/videos/test_heat_equation/480p15/partial_movie_files/TalkThrough1DHeatGraph/00000.mp4'
+file 'E:/GitHub/manim/manim-master/media/videos/test_heat_equation/480p15/partial_movie_files/TalkThrough1DHeatGraph/00001.mp4'
+file 'E:/GitHub/manim/manim-master/media/videos/test_heat_equation/480p15/partial_movie_files/TalkThrough1DHeatGraph/00002.mp4'
+file 'E:/GitHub/manim/manim-master/media/videos/test_heat_equation/480p15/partial_movie_files/TalkThrough1DHeatGraph/00003.mp4'
+file 'E:/GitHub/manim/manim-master/media/videos/test_heat_equation/480p15/partial_movie_files/TalkThrough1DHeatGraph/00004.mp4'
+file 'E:/GitHub/manim/manim-master/media/videos/test_heat_equation/480p15/partial_movie_files/TalkThrough1DHeatGraph/00005.mp4'
+file 'E:/GitHub/manim/manim-master/media/videos/test_heat_equation/480p15/partial_movie_files/TalkThrough1DHeatGraph/00006.mp4'
+file 'E:/GitHub/manim/manim-master/media/videos/test_heat_equation/480p15/partial_movie_files/TalkThrough1DHeatGraph/00007.mp4'

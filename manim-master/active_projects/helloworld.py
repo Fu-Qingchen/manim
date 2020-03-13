@@ -1,4 +1,5 @@
 from manimlib.imports import *
+from fu_usefull.DebugTeX import *
 
 # python -m manim helloworld.py HelloWorld -w
 
@@ -55,6 +56,7 @@ class LoveDeathRobots(Scene):
         self.play(Transform(line, text))
         all_group = VGroup(picture_Group, line)
         self.play(ApplyMethod(all_group.shift, UP*0.5))
+
 
 class Shoot(Scene):
 
@@ -136,20 +138,14 @@ class HelloWorld(Scene):
         helloManim_Text = TextMobject("Hello Manim")
         helloManim_Text.scale(2.5)
 
-        self.play(Write(helloworld_Text))
-        self.wait(1)
-        self.play(FadeIn(rectangle))
-        self.wait(1)
-        self.play(ApplyMethod(group1.scale, 2.5))
-        self.wait(1)
-        self.play(Transform(helloworld_Text, helloManim_Text))
-        self.wait(1)
+        self.add(helloManim_Text)
+        debugTeX(self, helloManim_Text[0])
+
 
 class Latex(Scene):
     def construct(self):
-        title = TextMobject("\\This is some \\LaTeX")
         basel = TexMobject(
             "\\sum_{n=1}^{\\infty}\\frac{1}{n^2}=\\frac{\\pi^2}{6}"
-        )
-        basel.next_to(title, DOWN)
-        self.play(Write(title), FadeInFrom(basel, DOWN))
+        ).scale(2)
+        self.play(Write(basel), run_time = 5)
+        debugTeX(self, basel[0])

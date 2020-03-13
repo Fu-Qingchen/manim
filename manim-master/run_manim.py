@@ -1,15 +1,18 @@
 import os
-file = open('run_manim.bat', 'w')
 
-path_list = ["",
+with open('run_manim.bat', 'w') as file:
+
+    path_list = ["",
              "active_projects\\"]
 
-# py_file_name = path_list[1] + "MechanicalCAD.py"
-py_file_name = path_list[1] + "Science3Mins.py"
-class_name = "Gird"
+    py_file_name = path_list[1] + "Interpolation.py"
 
-str = "python -m manim " + py_file_name + " " + class_name + " -pl"
+    class_name = "ShowLi"
 
-file.write(str)
-file.close()
+    # str = "python -m manim " + py_file_name + " " + class_name + " -p --high_quality"
+    # str = "python -m manim " + py_file_name + " " + class_name + " -pl"
+    str = "python -m manim " + py_file_name + " " + " -pal"
+
+    file.write(str)
+
 os.system("run_manim.bat")

@@ -207,6 +207,7 @@ class Chapter1OpeningQuote(OpeningQuote):
         "author" : "David Hilbert",
     }
 
+
 class Introduction(TeacherStudentsScene):
     def construct(self):
         self.show_series()
@@ -378,6 +379,7 @@ class Introduction(TeacherStudentsScene):
         self.play(ShowCreation(arrow))
         self.wait(2)
 
+
 class PreviewFrame(Scene):
     def construct(self):
         frame = Rectangle(height = 9, width = 16, color = WHITE)
@@ -401,6 +403,7 @@ class PreviewFrame(Scene):
         for next_title in titles[1:]:
             self.play(Transform(title, next_title))
             self.wait(3)
+
 
 class ProductRuleDiagram(Scene):
     def construct(self):
@@ -529,6 +532,7 @@ class ProductRuleDiagram(Scene):
             ])))
         ], run_time = 3)
         self.wait()
+
 
 class IntroduceCircle(CircleScene):
     CONFIG = {

@@ -1,13 +1,13 @@
 from manimlib.imports import *
 
-from active_projects.diffyq.part2.fourier_series import FourierOfTrebleClef
-from active_projects.diffyq.part4.complex_functions import TRangingFrom0To1
-from active_projects.diffyq.part4.complex_functions import SimpleComplexExponentExample
+from from_3b1b.active.diffyq.part2.fourier_series import FourierOfTrebleClef
+from from_3b1b.active.diffyq.part4.complex_functions import TRangingFrom0To1
+from from_3b1b.active.diffyq.part4.complex_functions import SimpleComplexExponentExample
 
 
 class ComplexFourierSeriesExample(FourierOfTrebleClef):
     CONFIG = {
-        "file_name": "EighthNote",
+        "file_name": "mouse_pre",
         "run_time": 10,
         "n_vectors": 200,
         "n_cycles": 2,
@@ -225,7 +225,7 @@ class ComplexFourierSeriesExample(FourierOfTrebleClef):
 
         top_rect = Rectangle(
             width=FRAME_WIDTH,
-            fill_color=BLACK,
+            fill_color="#b2032e",
             fill_opacity=1,
             stroke_width=0,
             height=self.top_rect_height,
@@ -1757,9 +1757,9 @@ class ShowStepFunctionIn2dView(SimpleComplexExponentExample, ComplexFourierSerie
 
 class AddVectorsOneByOne(IntegralTrick):
     CONFIG = {
-        "file_name": "TrebleClef",
+        "file_name": "mouse_pre",
         # "start_drawn": True,
-        "n_vectors": 101,
+        "n_vectors": 250,
         "path_height": 5,
     }
 

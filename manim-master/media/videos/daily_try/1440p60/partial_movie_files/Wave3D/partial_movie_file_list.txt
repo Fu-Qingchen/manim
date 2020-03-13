@@ -1,0 +1,4 @@
+file 'E:/GitHub/manim/manim-master/media/videos/daily_try/1440p60/partial_movie_files/Wave3D/00000.mp4'
+file 'E:/GitHub/manim/manim-master/media/videos/daily_try/1440p60/partial_movie_files/Wave3D/00001.mp4'
+file 'E:/GitHub/manim/manim-master/media/videos/daily_try/1440p60/partial_movie_files/Wave3D/00002.mp4'
+file 'E:/GitHub/manim/manim-master/media/videos/daily_try/1440p60/partial_movie_files/Wave3D/00003.mp4'

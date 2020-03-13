@@ -36,6 +36,7 @@ class Text(SVGMobject):
         't2g': {},
         't2s': {},
         't2w': {},
+        "stroke_width" : 0
     }
 
     def __init__(self, text, **config):
