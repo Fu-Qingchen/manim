@@ -729,65 +729,66 @@ class PiPicture0309(ZoomedScene):
         )
 
 
-class TestCreature(GraphScene):
+class Homework0315(Scene):
+    '''
+    三角形和正方形形成的面积相等
+    '''
     CONFIG = {
-        "point_x": [0, 1, 2, 3, 4, 5],
-        "point_y": [1, 2, 4, 3, 5, 2],
-        "x_min": 0,
-        "x_max": 5,
-        "x_axis_width": 5,
-        "x_tick_frequency": 1,
-        "y_min": 0,
-        "y_max": 5,
-        "y_axis_height": 5,
-        "graph_origin": -2.5 * UP + -1 * RIGHT,
+        "point_A": (1*X_AXIS + 2*Y_AXIS)/2,
+        "point_B": (-2*X_AXIS + -1*Y_AXIS)/2,
+        "point_C": (1.5*X_AXIS + -1*Y_AXIS)/2,
+        "tri_color": [RED, YELLOW, GREEN],
     }
-
     def construct(self):
-        # object
-        self.setup_axes(animate=True)
-        points = VGroup(*[
-            Dot(self.coords_to_point(self.point_x[i], self.point_y[i]))
-            for i in range(len(self.point_y))
+        points = [self.point_A, self.point_B, self.point_C]
+
+        triangle = Polygon(*points, plot_depth = 1).set_color(BLUE).set_fill(BLUE, 0.5)
+
+        group_rect = VGroup(*[
+            Polygon(*self.get_rect_points(*[points[(i - j) % len(points)] for j in range(2)]))\
+                .set_color(WHITE)
+            for i in range(len(points))
         ])
-        self.graph = self.get_graph(self.interpolation_function, x_min=0,x_max=5)
-        formular = TexMobject(r"L_n(x)=\sum\limits_{i=0}^ny_i\prod\limits_{j=0,j\neq i}^n {(x-x_j)\over(x_i-x_j)}")\
-            .add_background_rectangle().move_to(self.graph.get_center())
-        self.f_creature = FCreature("happy").shift(LEFT*4)
+        
+        group_tri = VGroup(*[
+            Polygon(*self.get_tri_points(*[points[(i - j) % len(points)] for j in range(3)]))\
+                .set_color(self.tri_color[i]).round_corners(0.005).set_fill(self.tri_color[i], 0.5)
+            for i in range(len(points))
+        ])
 
-        #   animation
-        self.play(FadeInFrom(self.f_creature, LEFT))
-        for i in range(len(points)):
-            self.play(ShowCreation(points[i]), self.f_creature.look_at, points[i], run_time=0.5)
-        self.play(ShowCreation(self.graph), self.f_creature.look_at, self.graph, run_time = 1.5)
-        self.wait()
-        self.play(Blink(self.f_creature))
-        self.play(Write(formular), self.f_creature.look_at, formular, self.f_creature.change_mode, "plain", run_time = 2)
-        self.play(self.f_creature.look, LEFT)
-        self.play(self.f_creature.shift, LEFT*4, rate_func = linear, run_time = 8)
-        self.wait()
+        text = VGroup(TexMobject(r"S\ =S\ "), TexMobject(r"=S\ "), TexMobject(r"=S\ ")).arrange(RIGHT).next_to(group_tri, DOWN)
+        triangle_text = triangle.copy().scale(0.1).next_to(text[0][0][0]).shift(0.2*LEFT + 0.2*DOWN)
+        group_tri_text = VGroup(*[
+            Polygon(*self.get_tri_points(*[points[(i - j) % len(points)] for j in range(3)]))\
+                .set_color(self.tri_color[i]).round_corners(0.005).set_fill(self.tri_color[i], 0.5).scale(0.1)\
+                    .next_to(text[i][0][-1]).shift(0.25*LEFT + 0.2*DOWN).rotate(PI/2)
+            for i in range(len(points))
+        ])
 
+        self.play(ShowCreation(triangle))
+        self.play(*[ShowCreation(group_rect[i]) for i in range(len(group_rect))], run_time = 2)
+        self.play(*[ShowCreation(group_tri[i]) for i in range(len(group_tri))], run_time = 2)
+        self.play(FadeOut(group_rect))
+        self.play(*[Rotate(group_tri[i], 
+            angle = PI/2,
+            about_point = self.get_rect_points(*[points[(i - j) % len(points)] for j in range(2)])[1]) for i in range(len(group_tri))], 
+            run_time = 2)
+        for i in range(len(group_tri)):
+            self.play(FadeIn(text[i]),
+                Transform(triangle.copy(), triangle_text), TransformFromCopy(group_tri[i], group_tri_text[i]), run_time = 2)
+            self.wait()
+        
+    def get_rect_points(self, point_1, point_2):
+        temp = point_2 - point_1
+        point_1_pre = point_1 + temp[0] * Y_AXIS - temp[1] * X_AXIS
+        point_2_pre = point_1_pre + temp
+        return [point_1, point_2, point_2_pre, point_1_pre]
 
-    def interpolation_function(self, x):
-        L = 0
-        for i in range(len(self.point_y)):
-            L += self.point_y[i]*self.get_li(x, i)
-        return L
-    
-    def get_li(self, x, i):
-        li = 1
-        for xi in self.point_x:
-            if xi!=self.point_x[i]:
-                li*=(x-xi)/(self.point_x[i]-xi)
-        return li
+    def get_tri_points(self, point_1, point_main, point_2):
+        point_1_pre = self.get_rect_points(point_1, point_main) 
+        point_2_pre = self.get_rect_points(point_main, point_2) 
+        return [point_1_pre[2], point_main, point_2_pre[3]]
 
-
-class debug(Scene):
-    def construct(self):
-        a = FCreature().scale(2)
-        self.add(a)
-        debugTeX(self, a)
-        self.wait()
 
 
 # TODO: 绘制负载转速图
