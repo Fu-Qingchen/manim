@@ -5,6 +5,7 @@ MEDIA_DIR = ""
 VIDEO_DIR = ""
 VIDEO_OUTPUT_DIR = ""
 TEX_DIR = ""
+ADDON_DIR = os.path.join(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir), "addons")
 TEXT_DIR = ""
 
 
@@ -13,6 +14,16 @@ def initialize_directories(config):
     global VIDEO_DIR
     global VIDEO_OUTPUT_DIR
     global TEX_DIR
+    global TEXT_DIR
+    global ADDON_DIR
+
+    configured_video_path = config["video_dir"] or config["video_output_dir"]
+
+    if not (configured_video_path and config["tex_dir"]):
+        MEDIA_DIR = config["media_dir"] or os.path.join(
+            os.path.expanduser('~'),
+            "Dropbox (3Blue1Brown)/3Blue1Brown Team Folder"
+        )
     global TEXT_DIR
 
     video_path_specified = config["video_dir"] or config["video_output_dir"]
@@ -38,6 +49,8 @@ def initialize_directories(config):
                 "directory were both passed"
             )
 
+    VIDEO_DIR = config["video_dir"] or os.path.join(MEDIA_DIR, "videos")
+    VIDEO_OUTPUT_DIR = config["video_output_dir"] or os.path.join(MEDIA_DIR, "videos")
     TEX_DIR = config["tex_dir"] or os.path.join(MEDIA_DIR, "Tex")
     TEXT_DIR = os.path.join(MEDIA_DIR, "texts")
     if not video_path_specified:
@@ -48,7 +61,7 @@ def initialize_directories(config):
     else:
         VIDEO_DIR = config["video_dir"]
 
-    for folder in [VIDEO_DIR, VIDEO_OUTPUT_DIR, TEX_DIR, TEXT_DIR]:
+    for folder in [VIDEO_DIR, VIDEO_OUTPUT_DIR, TEX_DIR, TEXT_DIR, ADDON_DIR]:
         if folder != "" and not os.path.exists(folder):
             os.makedirs(folder)
 

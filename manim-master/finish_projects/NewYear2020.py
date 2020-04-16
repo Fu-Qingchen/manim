@@ -331,7 +331,8 @@ class ComplexFourierSeriesExample(FourierOfTrebleClef):
 
 class FourierOfMouse(FourierSeriesExampleWithRectForZoom):
     CONFIG = {
-        "file_name": "mouse",
+        # "file_name": "mouse",
+        "file_name": r"E:\GitHub\manim\manim-master\assets\svg_images\mouse.svg",
         "drawing_height": 7,
         "n_vectors": 1000,
         "drawn_path_color": YELLOW,

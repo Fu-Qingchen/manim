@@ -17,6 +17,7 @@ from manimlib.utils.file_ops import guarantee_existence
 from manimlib.utils.file_ops import add_extension_if_not_present
 from manimlib.utils.file_ops import get_sorted_integer_files
 from manimlib.utils.sounds import get_full_sound_file_path
+import manimlib.addon_helper
 
 
 class SceneFileWriter(object):
@@ -362,6 +363,8 @@ class SceneFileWriter(object):
             shutil.move(temp_file_path, movie_file_path)
             os.remove(sound_file_path)
 
+        # Send the file path to the addon helper so it can be passed to addons that need it
+        manimlib.addon_helper.movie_paths.append(movie_file_path)
         self.print_file_ready_message(movie_file_path)
 
     def print_file_ready_message(self, file_path):

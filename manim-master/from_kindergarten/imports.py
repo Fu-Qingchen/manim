@@ -11,3 +11,5 @@ from from_kindergarten.PolarPlane import *
 from from_kindergarten.Right_angle import *
 from from_kindergarten.ThreeDVector import *
 from from_kindergarten.Trail import *
+from from_kindergarten.test_present_style import *
+from from_kindergarten.Logo_k import *

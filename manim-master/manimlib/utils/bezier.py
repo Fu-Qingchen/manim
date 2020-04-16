@@ -1,3 +1,7 @@
+'''
+这个文件中主要处理了和贝塞尔曲线、插值有关的函数
+'''
+
 from scipy import linalg
 import numpy as np
 
@@ -7,6 +11,10 @@ CLOSED_THRESHOLD = 0.001
 
 
 def bezier(points):
+    '''
+    返回由点集(锚点，控制点)确定的参数方程
+    贝塞尔曲线的次数由points中点的个数确定
+    '''
     n = len(points) - 1
     return lambda t: sum([
         ((1 - t)**(n - k)) * (t**k) * choose(n, k) * point
@@ -21,8 +29,12 @@ def partial_bezier_points(points, a, b):
     return an array of the same size, which
     describes the portion of the original bezier
     curve on the interval [a, b].
+    输入贝塞尔曲线的点数组和两个0,1之间的数a,b
+    返回一个大小相同的数组
+    该数组描述原始贝塞尔曲线在间隔[a,b]上的部分
 
     This algorithm is pretty nifty, and pretty dense.
+    这个算法很漂亮，也很复杂
     """
     if a == 1:
         return [points[-1]] * len(points)
@@ -41,6 +53,9 @@ def partial_bezier_points(points, a, b):
 # Linear interpolation variants
 
 def interpolate(start, end, alpha):
+    '''
+    线性插值
+    '''
     return (1 - alpha) * start + alpha * end
 
 
@@ -52,6 +67,8 @@ def integer_interpolate(start, end, alpha):
     "residue" representing a new proportion between the
     returned integer and the next one of the
     list.
+    整数插值
+    返回两个数，第一个为插值结果(整数)，第二个为和线性插值相差的小数部分
 
     For example, if start=0, end=10, alpha=0.46, This
     would return (4, 0.6).
@@ -66,14 +83,25 @@ def integer_interpolate(start, end, alpha):
 
 
 def mid(start, end):
+    '''
+    返回两个数的平均值
+    '''
     return (start + end) / 2.0
 
 
 def inverse_interpolate(start, end, value):
+    '''
+    由插值的结果value，返回alpha
+    '''
     return np.true_divide(value - start, end - start)
 
 
 def match_interpolate(new_start, new_end, old_start, old_end, old_value):
+    '''
+    匹配插值
+    给出原插值范围old_start,old_end和结果old_value
+    返回以相同比例，插值范围为new_start,new_end的插值结果
+    '''
     return interpolate(
         new_start, new_end,
         inverse_interpolate(old_start, old_end, old_value)
@@ -84,6 +112,10 @@ def match_interpolate(new_start, new_end, old_start, old_end, old_value):
 
 
 def get_smooth_handle_points(points):
+    '''
+    给出一系列锚点points
+    返回经过points的平滑贝塞尔曲线的一系列控制点
+    '''
     points = np.array(points)
     num_handles = len(points) - 1
     dim = points.shape[1]
@@ -145,6 +177,7 @@ def diag_to_matrix(l_and_u, diag):
     Converts array whose rows represent diagonal
     entries of a matrix into the matrix itself.
     See scipy.linalg.solve_banded
+    LDU分解还原
     """
     l, u = l_and_u
     dim = diag.shape[1]
@@ -158,4 +191,7 @@ def diag_to_matrix(l_and_u, diag):
 
 
 def is_closed(points):
+    '''
+    检查曲线是否闭合(首尾锚点重合)
+    '''
     return np.allclose(points[0], points[-1])

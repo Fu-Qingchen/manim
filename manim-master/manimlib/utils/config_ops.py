@@ -1,8 +1,15 @@
+'''
+这个文件中主要处理了CONFIG字典和类的属性
+'''
+
 import inspect
 import itertools as it
 
 
 def get_all_descendent_classes(Class):
+    '''
+    获取Class的全部子类
+    '''
     awaiting_review = [Class]
     result = []
     while awaiting_review:
@@ -13,6 +20,9 @@ def get_all_descendent_classes(Class):
 
 
 def filtered_locals(caller_locals):
+    '''
+    将输入字典中的["self", "kwargs"]去掉
+    '''
     result = caller_locals.copy()
     ignored_local_args = ["self", "kwargs"]
     for arg in ignored_local_args:
@@ -23,6 +33,8 @@ def filtered_locals(caller_locals):
 def digest_config(obj, kwargs, caller_locals={}):
     """
     Sets init args and CONFIG values as local variables
+    获取当前类和所有父类的CONFIG字典，转换为属性（优先级已经处理好）
+    若要将当前所有局部变量也转化为属性，使用digest_config(self, kwargs, locals())
 
     The purpose of this function is to ensure that all
     configuration of any object is inheritable, able to
@@ -48,13 +60,18 @@ def digest_config(obj, kwargs, caller_locals={}):
 
 def merge_dicts_recursively(*dicts):
     """
+    递归合并字典
     Creates a dict whose keyset is the union of all the
     input dictionaries.  The value for each key is based
     on the first dict in the list with that key.
+    创建一个字典，其键集是所有输入字典的并集，
+    每个键的值都基于列表中带有该键的第一个字典
 
     dicts later in the list have higher priority
+    后面的字典优先级更高
 
     When values are dictionaries, it is applied recursively
+    当值为字典时，将递归应用
     """
     result = dict()
     all_items = it.chain(*[d.items() for d in dicts])
@@ -68,8 +85,10 @@ def merge_dicts_recursively(*dicts):
 
 def soft_dict_update(d1, d2):
     """
+    合并字典
     Adds key values pairs of d2 to d1 only when d1 doesn't
     already have that key
+    仅当d1没有该键时，才将d2的键值对添加到d1中
     """
     for key, value in list(d2.items()):
         if key not in d1:
@@ -77,6 +96,9 @@ def soft_dict_update(d1, d2):
 
 
 def digest_locals(obj, keys=None):
+    '''
+    将当前局部变量变为属性
+    '''
     caller_locals = filtered_locals(
         inspect.currentframe().f_back.f_locals
     )

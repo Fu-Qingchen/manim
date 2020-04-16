@@ -790,6 +790,401 @@ class Homework0315(Scene):
         return [point_1_pre[2], point_main, point_2_pre[3]]
 
 
+class Homework0321(ZoomedScene):
+    CONFIG = {
+        "number_of_block": 10,
+        "colors": [RED, YELLOW, GREEN, BLUE, PURPLE]
+    }
+
+    def construct(self):
+        # objects
+        groups_list = []
+        colors = color_gradient(self.colors, self.number_of_block + 1)
+        for i in range(self.number_of_block):
+            x = (i+1)**2/2 
+            coors_x = []
+            coors_y = []
+            for n in range(int(((i+1)**2/2 - (i+1)/2)/(i+1) + 1)):
+                y = (i+1)/2 + (i+1)*n
+                coors_x.append(x)
+                coors_y.append(y)
+                if x!=y:
+                    coors_x.append(y)
+                    coors_y.append(x)
+            groups_list.append(VGroup(*[
+                Square(side_length = i+1).move_to(coors_x[ii]*RIGHT + coors_y[ii]*DOWN)\
+                    .set_fill(colors[i], 0.3).set_color(colors[i])
+                for ii in range(len(coors_x))
+            ]))
+        poly_group = VGroup(*[
+            Polygon(*self.get_poly_point(i + 1)).set_color(WHITE).set_fill(WHITE, 0.3)
+            for i in range(self.number_of_block)
+        ])
+        poly_fill_group = VGroup(*[
+            Polygon(*self.get_poly_point(i + 1)).set_fill(colors[i], 0.3).set_color(colors[i])
+            for i in range(self.number_of_block)
+        ])
+        brace = Brace(groups_list[0].copy().scale(1), LEFT)\
+            .scale((1+1)/2).shift(DOWN*(1+1)*1/4 + 1/2).next_to(groups_list[0], LEFT)
+        brace_label = TexMobject("1").scale((1+1)/2).next_to(brace, LEFT)
+        text = VGroup(*[
+            TexMobject("S = {}·{}^2".format(i+1, i+1)).move_to((i*(i+1)/2 + (i+1)*(i+2)/2)/2*(np.array([0.8, -1, 0]))).scale(0.7*(i+1))
+            for i in range(self.number_of_block-2)
+        ], TexMobject("S = {n}·{n}^2").move_to((8*(8+1)/2 + (8+1)*(8+2)/2)/2*(np.array([0.8, -1, 0]))).scale(0.7*(8+1)))
+        text_change = VGroup(*[
+            TexMobject("S ={}^3".format(i+1, i+1)).move_to((i*(i+1)/2 + (i+1)*(i+2)/2)/2*(np.array([0.8, -1, 0]))).scale(0.7*(i+1))
+            for i in range(self.number_of_block-2)
+        ], TexMobject("S = {n}^3").move_to((8*(8+1)/2 + (8+1)*(8+2)/2)/2*(np.array([0.8, -1, 0]))).scale(0.7*(8+1)))
+        brace_label_group = VGroup(
+            TexMobject(r"1").move_to(groups_list[0].get_center()).next_to(brace, LEFT),
+            TexMobject(r"1 + 2").move_to(groups_list[1].get_center()).next_to(brace, LEFT),
+            TexMobject(r"1 + 2 + 3").move_to(groups_list[2].get_center()).next_to(brace, LEFT),
+            TexMobject(r"1 + 2 + 3\\ + 4").move_to(groups_list[3].get_center()).next_to(brace, LEFT),
+            TexMobject(r"1 + 2 + 3\\ + 4 + 5").move_to(groups_list[4].get_center()).next_to(brace, LEFT),
+            TexMobject(r"1 + 2 + 3\\ + 4 + 5 + 6").move_to(groups_list[5].get_center()).next_to(brace, LEFT),
+            TexMobject(r"1 + 2 + 3\\ + 4 + 5 + 6\\ + 7").move_to(groups_list[6].get_center()).next_to(brace, LEFT),
+            TexMobject(r"1 + 2 + 3\\ + 4 + 5 + 6\\ + 7 + ... ").move_to(groups_list[7].get_center()).next_to(brace, LEFT),
+            TexMobject(r"1 + 2 + 3\\ + 4 + 5 + 6\\ + 7 + ... + n").move_to(groups_list[8].get_center()).next_to(brace, LEFT),
+        ).scale(0.8)
+        formular = VGroup(
+            TexMobject(r"(\sum\limits_{i=1}^ni)^2"), 
+            TexMobject(r"="),
+            TexMobject(r"\sum\limits_{i=1}^ni^3"), 
+        ).arrange(RIGHT).scale(self.number_of_block).next_to(groups_list[-1]).scale(0.8).shift(10*LEFT + 5*UP)
+
+        # animations
+        self.camera.frame.move_to(groups_list[0].get_center())
+        self.camera.frame.scale(0.8)
+        self.play(Write(groups_list[0]), run_time = 0 + 1)
+        self.play(FadeIn(brace), FadeIn(brace_label_group[0]))
+        self.play(ShowCreation(poly_group[0]))
+        self.wait(0.5)
+        self.play(Transform(poly_group[0], text[0]))
+        self.wait(0.5)
+        self.play(Transform(poly_group[0], text_change[0]))
+        self.wait()
+
+        for i in range(self.number_of_block-2):
+            self.play(self.camera.frame.move_to, groups_list[i+1].get_center(), self.camera.frame.scale, (i+2)/(i+1))
+            self.play(Write(groups_list[i+1]), run_time = (i + 1)**0.5)
+            self.play(
+                Transform(brace, Brace(groups_list[i+1].copy().scale(1/(i+2)), LEFT)\
+                    .scale(i+2).shift(DOWN*(i+2)*1/4 + 1/2).next_to(groups_list[i+1], LEFT)), 
+                Transform(brace_label_group[0], brace_label_group[i + 1].scale(i+2)\
+                    .next_to(groups_list[i+1], LEFT, buff = MED_LARGE_BUFF*(i+2))))
+            self.play(ShowCreation(poly_group[i+1]), run_time = (i+1)**0.5)
+            self.wait(0.5)
+            self.play(Transform(poly_group[i+1], text[i+1]))
+            self.wait(0.5)
+            self.play(Transform(poly_group[i+1], text_change[i+1]))
+            self.wait()
+            self.play(FadeOut(groups_list[i+1]), FadeIn(poly_fill_group[i+1]))
+
+        self.play(self.camera.frame.move_to, VGroup(formular, groups_list[-1], brace_label_group).get_center(), 
+            self.camera.frame.scale, 1.2, self.camera.frame.shift, 5*UP)
+        self.play(TransformFromCopy(brace_label_group[0], formular[0]), Write(formular[1]), TransformFromCopy(poly_group[0:8], formular[2]), run_time = 3)
+        self.wait(2)
+
+    def get_poly_point(self, i):
+        x0 = i*(i-1)/2
+        x1 = i*(i+1)/2
+        return [x0*RIGHT, x1*RIGHT, x1*RIGHT + x1*DOWN, x1*DOWN, x0*DOWN, x0*RIGHT + x0*DOWN]
+
+
+class Homework0328(Scene):
+    '''
+    椭圆包络线
+    '''
+    CONFIG = {
+        "camera_config": {
+            "background_color": "#FFFFFF"
+        }
+    }
+    def construct(self):
+        grid = NumberPlane().set_color(RED)
+        dot_o = Dot(DOWN, color=RED)
+        line_o = Line(LEFT*2 + UP, RIGHT*2 + UP, color=RED)
+        value_tracker = ValueTracker(0)
+
+        dot_anim = Dot(LEFT*2 + UP, color=RED)
+        line_anim = Line(dot_o, dot_anim, color=RED)
+
+        self.add(grid, dot_o, line_o, dot_anim, line_anim)
+        self.wait()
+
+
+class Homework0405(Scene):
+    '''
+    对align_to的解释:
+    manim中使用align_to()进行对齐操作
+    align_to()具有两个参数，mobject_or_point和direction 
+    # 注：其实源码还有一个alignment_vect参数，但是不起作用
+    mobject_or_point表示对齐的参照物/点, direction是对齐的方向，
+    direction用三维ndarray表示，默认为原点，即不变化
+    平面上有八个方向，包括上下左右4个方向和4个角
+    '''
+    CONFIG = {
+        'camera_config': {
+            'background_color': WHITE
+        }
+    }
+    def test_align_to(self):
+        grid = NumberPlane()
+        colors = color_gradient([RED, ORANGE, YELLOW, GREEN, BLUE, PURPLE], 101)
+        circle = Circle().scale(3).shift(LEFT* 4)
+        square = Square().scale(0.1)
+        self.add(grid, circle, square)
+        for i in range(100):
+            self.play(square.copy().align_to, circle, UP*np.cos(2*PI/100*i) + LEFT*np.sin(2*PI/100*i), square.set_color, colors[i], run_time = 0.5)
+        self.play(square.align_to, np.array([0, -2, 0]), DOWN + 0.1*LEFT)
+        self.wait()
+
+    def construct(self):
+        # self.test_align_to()
+
+        # objects
+        mk_logo = Logo_MK(size=2, black_bg=False, add_bg_square=True, plot_depth = -1).shift(RIGHT*-1 + UP).scale(0.5)
+        coin = VGroup(SVGMobject('coin.svg').scale(0.4).set_color('#fb7299'), 
+            Circle(plot_depth = 2).scale(0.5).set_color('#fb7299')).shift(DOWN*1.5 + RIGHT*-5)
+
+        tex_bg = Rectangle(stroke_width=1, stroke_color=GRAY, fill_color=LIGHT_GREY, fill_opacity=0.25, plot_depth=-1)
+        tex_bg.set_height(5.2, stretch=True).set_width(5.9, stretch=True)
+        loc = UP * 2.9 + RIGHT * 2.64
+        tex_bg.to_corner(RIGHT * 1.25 + UP * 1.25).shift(DOWN)
+        code_align = VGroup(
+            CodeLine("mob.align_to()").scale(2),
+            CodeLine('mob.align_to(mobject_or_point, direction)').scale(1.5),
+        )
+
+        codes = VGroup(
+            CodeLine("self.add(mob)"),
+            CodeLine("self.add(logo)"),
+            CodeLine("mob.align_to(logo)"),
+            CodeLine("mob.align_to(logo,~RIGHT)"),
+            CodeLine("mob.align_to(logo, UR)"),
+            VGroup(
+                CodeLine("#", font='Consolas').set_color(GREEN),
+                CodeLine("其实", font='SourceHanSansSC-Regular').set_color(GREEN),
+                CodeLine("align_to()", font='Consolas').set_color(GREEN),
+                CodeLine("还有一个参数", font='SourceHanSansSC-Regular').set_color(GREEN),
+            ).arrange(RIGHT, buff = 0.1),
+            # CodeLine("#其实align_to()还有一个参数", font=['Consolas', 'SourceHanSansSC-Regular']).set_color(GREEN),
+            VGroup(
+                CodeLine("#", font='Consolas').set_color(GREEN),
+                CodeLine("alignment_vect", font='Consolas').set_color(GREEN),
+            ).arrange(RIGHT, buff = 0.1),
+            VGroup(
+                CodeLine("#", font='Consolas').set_color(GREEN),
+                CodeLine("但是这个参数并没有任何作用", font='SourceHanSansSC-Regular').set_color(GREEN),
+            ).arrange(RIGHT, buff = 0.1),
+            # CodeLine("# 但是这个参数并没有任何作用", font='SourceHanSansSC-Regular').set_color(GREEN),
+        ).arrange(DOWN, aligned_edge = LEFT).move_to(tex_bg.get_center())
+        codes_change = VGroup(
+            CodeLine("#").set_color(GREEN).shift(codes[3].get_center()),
+            CodeLine("mob.align_to(logo,RIGHT)").set_color(GREEN)
+            ).arrange(RIGHT, buff = 0.1).shift(codes[3].get_center())
+
+        loc_02 = DOWN * 1.2
+        caps = VGroup(
+            CodeLine('在manim中使用align_to()进行对齐操作', font='SourceHanSansSC-Bold', size=0.32).to_edge(loc_02),
+            CodeLine('align_to()具有两个参数，mobject_or_point和direction', font='SourceHanSansSC-Bold', size=0.32).to_edge(loc_02),
+            CodeLine('先将物体加入场景中', font='SourceHanSansSC-Bold', size=0.32).to_edge(loc_02),
+            CodeLine('mobject_or_point表示对齐的参照物/点', font='SourceHanSansSC-Bold', size=0.32).to_edge(loc_02),
+            CodeLine('direction默认为不做任何对齐', font='SourceHanSansSC-Bold', size=0.32).to_edge(loc_02),
+            CodeLine('direction表示对齐的方向，平面上有八个方向', font='SourceHanSansSC-Bold', size=0.32).to_edge(loc_02),
+            CodeLine('包括上下左右四个方向和四个对角线', font='SourceHanSansSC-Bold', size=0.32).to_edge(loc_02),
+            CodeLine('direction用三维ndarray表示，例如RIGHT(np.array([1,0,0]))', font='SourceHanSansSC-Bold', size=0.32).to_edge(loc_02),
+            CodeLine('当np.array([x,y,z])任意一维度非零时，便向那一边对齐', font='SourceHanSansSC-Bold', size=0.32).to_edge(loc_02),
+            CodeLine('UR(np.array([1,1,0]))x,y非零为正,向右上对齐', font='SourceHanSansSC-Bold', size=0.32).to_edge(loc_02),
+        ).to_edge(loc_02)
+
+        line = Line(mk_logo.get_corner(UR), coin.get_corner(DR)[1]*UP + mk_logo.get_corner(DR)[0]*RIGHT).set_color(BLUE)
+        line.add_updater(lambda m: m.become(Line(mk_logo.get_corner(UR), 
+            coin.get_corner(DR)[1]*UP + mk_logo.get_corner(DR)[0]*RIGHT).set_color(BLUE)))
+        vector_right = Arrow(
+            coin.get_corner(UL)[1]*UP + coin.get_center()[0]*RIGHT, 
+            coin.get_corner(UL)[1]*UP + coin.get_center()[0]*RIGHT, buff = 0).set_color('#fb7299')
+        vector_right.add_updater(lambda m:m.become(Arrow(
+            coin.get_center()[1]*UP + coin.get_corner(DR)[0]*RIGHT, 
+            coin.get_center()[1]*UP + mk_logo.get_corner(DR)[0]*RIGHT, buff = 0).set_color('#fb7299')))
+
+        line_up = Line(mk_logo.get_corner(UR), coin.get_corner(DL)[0]*RIGHT + mk_logo.get_corner(UR)[1]*UP).set_color(BLUE)
+        line_up.add_updater(lambda m:m.become(Line(mk_logo.get_corner(UR), 
+            coin.get_corner(DL)[0]*RIGHT + mk_logo.get_corner(UR)[1]*UP).set_color(BLUE)))
+        vector_up = Arrow(
+            coin.get_edge_center(UP), 
+            coin.get_center()[0]*RIGHT + mk_logo.get_corner(UR)[1]*UP, buff = 0).set_color('#fb7299')
+        vector_up.add_updater(lambda m:m.become(Arrow(
+            coin.get_edge_center(UP),
+            coin.get_center()[0]*RIGHT + mk_logo.get_corner(UR)[1]*UP, buff = 0).set_color('#fb7299')))
+        
+        direction_label = CodeLine('direction').next_to(vector_right, DOWN).set_color('#fb7299')
+        direction_label.add_updater(lambda m: m.become(CodeLine('direction').next_to(vector_right, DOWN, buff = 0.75).set_color('#fb7299')))
+        arrows = VGroup(
+            VGroup(Arrow(ORIGIN, RIGHT*2), Arrow(ORIGIN, UP*2), Arrow(ORIGIN, LEFT*2), Arrow(ORIGIN, DOWN*2)),
+            VGroup(Arrow(ORIGIN, UL*2), Arrow(ORIGIN, UR*2), Arrow(ORIGIN, DL*2), Arrow(ORIGIN, DR*2)),
+        ).move_to(coin.get_center()).set_color('#fb7299')
+
+        # animations
+        ## Introduction
+        self.play(Write(code_align[0]), Write(caps[0]))
+        self.wait()
+        self.play(Transform(code_align[0][0:13], code_align[1][0:13]), FadeInFromDown(code_align[1][13:40]), 
+            Transform(code_align[0][13], code_align[1][-1]))
+        self.wait()
+        ## Codes
+        self.play(ReplacementTransform(caps[0], caps[1]))
+        self.wait()
+        self.play(code_align.to_edge, UP, code_align.scale, 0.9)
+        self.wait(0.5)
+
+        self.play(FadeInFromDown(tex_bg))
+        self.wait(0.5)
+        self.play(ReplacementTransform(caps[1], caps[2]))
+        self.wait(0.5)
+        self.play(TransformFromCopy(code_align[0][0:4], coin), Write(codes[0]))
+        self.wait()
+
+        self.play(TransformFromCopy(code_align[1][13:29], mk_logo), Write(codes[1]), ReplacementTransform(caps[2], caps[3]))
+        self.wait()
+        self.play(Flash(mk_logo, flash_radius = coin.get_width(), color=BLUE))
+
+        self.play(ReplacementTransform(caps[3], caps[4]))
+        self.wait()
+        self.play(Write(codes[2]))
+        self.play(Flash(coin, flash_radius = coin.get_width(), color='#fb7299'))
+        self.wait()
+
+        self.play(ReplacementTransform(caps[4], caps[5]))
+        self.wait()
+        self.play(ShowCreation(arrows[0]))
+        self.play(ShowCreation(arrows[1]))
+
+        self.play(ReplacementTransform(caps[5], caps[6]))
+        self.wait()
+        self.play(FadeOut(arrows), run_time = 2)
+
+        self.play(ReplacementTransform(caps[6], caps[7]))
+        self.wait()
+        self.play(Write(codes[3]))
+        self.wait()
+        self.play(ShowCreation(line), ShowCreation(vector_right), TransformFromCopy(code_align[1][29:36], direction_label))
+        self.wait()
+        self.play(coin.align_to, mk_logo, LEFT)
+        self.play(FadeOutAndShift(VGroup(direction_label, line, vector_right), RIGHT))
+
+        self.play(ReplacementTransform(caps[7], caps[8]))
+        self.wait(2)
+        self.play(Write(codes[4]), Transform(codes[3], codes_change), coin.move_to, DOWN*1.5 + RIGHT*-5)
+        self.wait()
+        self.play(ShowCreation(line), ShowCreation(vector_right), ShowCreation(line_up), ShowCreation(vector_up))
+        self.wait()
+
+        self.play(ReplacementTransform(caps[8], caps[9]))
+        self.wait(1.5)
+        self.play(coin.align_to, mk_logo, UR, run_time = 1.5)
+        self.play(FadeOutAndShift(VGroup(line, vector_right, line_up, vector_up), RIGHT))
+        self.wait()
+        self.play(Write(codes[5]), run_time = 1)
+        self.play(Write(codes[6]), run_time = 1)
+        self.play(Write(codes[7]), run_time = 1)
+        self.wait()
+
+
+class TheoreticalMechanicsExercises(Scene):
+    CONFIG = {
+        'm': 1, 
+        'M': 5,
+        'S': 4,
+        'l_0': 2.0,
+        'theta_0': PI/3,
+        'dt': 0.0001,
+        'g': 9.8,
+    }
+
+    def get_position_value(self, t):
+        for i in range(int(t/self.dt)):
+            self.ddl.append((self.m*self.l[-1]*self.dtheta[-1]**2 + self.m*self.g*np.sin(self.theta[-1])-self.M*self.g)/(self.m + self.M))
+            self.ddtheta.append((self.g*np.cos(self.theta[-1])-2*self.dl[-1]*self.dtheta[-1])/(self.l[-1]))
+            self.dl.append(self.dl[-1] + self.dt*self.ddl[-1])
+            self.dtheta.append(self.dtheta[-1] + self.dt*self.ddtheta[-1])
+            self.l.append(self.l[-1] + self.dt*self.dl[-1])
+            self.theta.append(self.theta[-1] + self.dt*self.dtheta[-1])
+    
+    def construct(self):
+        self.ddl, self.ddtheta = [], []
+        self.dl, self.dtheta = [0.0], [0.0]
+        self.l, self.theta = [self.l_0], [self.theta_0]
+        self.get_position_value(10)
+        time = ValueTracker(0)
+        origin = Dot()
+
+        text = TextMobject("时间:").to_edge(UL)
+        deci = DecimalNumber(time.get_value()).next_to(text, RIGHT)
+        deci.add_updater(lambda m:m.become(DecimalNumber(time.get_value()).next_to(text, RIGHT)))
+
+        text_V = VGroup(
+            TextMobject("总动能"),
+            DecimalNumber(0.5*self.M*self.dl[int(time.get_value()/self.dt)]**2 + 0.5*self.dtheta[int(time.get_value()/self.dt)]**2*self.l[int(time.get_value()/self.dt)]**2*self.m + 0.5*self.dl[int(time.get_value()/self.dt)]**2*self.m)
+        ).arrange(RIGHT).next_to(text, DOWN, aligned_edge = LEFT)
+        text_V.add_updater(lambda m:m.become(
+            VGroup(
+                TextMobject("总动能"),
+                DecimalNumber(0.5*self.M*self.dl[int(time.get_value()/self.dt)]**2 + 0.5*self.dtheta[int(time.get_value()/self.dt)]**2*self.l[int(time.get_value()/self.dt)]**2*self.m + 0.5*self.dl[int(time.get_value()/self.dt)]**2*self.m)
+        ).arrange(RIGHT).next_to(text, DOWN, aligned_edge = LEFT)
+        ))
+
+        text_T = VGroup(
+            TextMobject("总势能"),
+            DecimalNumber(self.g*(-self.M*self.S + self.M*self.l[int(time.get_value()/self.dt)]-self.l[int(time.get_value()/self.dt)]*self.m*np.sin(self.theta[int(time.get_value()/self.dt)])))
+        ).arrange(RIGHT).next_to(text_V, DOWN, aligned_edge = LEFT)
+        text_T.add_updater(lambda m:m.become(
+            VGroup(
+                TextMobject("总势能"),
+                DecimalNumber(self.g*(-self.M*self.S + self.M*self.l[int(time.get_value()/self.dt)]-self.l[int(time.get_value()/self.dt)]*self.m*np.sin(self.theta[int(time.get_value()/self.dt)])))
+        ).arrange(RIGHT).next_to(text_V, DOWN, aligned_edge = LEFT)
+        ))
+
+        text_E = VGroup(
+            TextMobject("总能量"),
+            DecimalNumber(0.5*self.M*self.dl[int(time.get_value()/self.dt)]**2 + 0.5*self.dtheta[int(time.get_value()/self.dt)]**2*self.l[int(time.get_value()/self.dt)]**2*self.m + 0.5*self.dl[int(time.get_value()/self.dt)]**2*self.m + 
+            self.g*(-self.M*self.S + self.M*self.l[int(time.get_value()/self.dt)]-self.l[int(time.get_value()/self.dt)]*self.m*np.sin(self.theta[int(time.get_value()/self.dt)])))
+        ).arrange(RIGHT).next_to(text_T, DOWN, aligned_edge = LEFT)
+        text_E.add_updater(lambda m:m.become(
+            VGroup(
+                TextMobject("总能量"),
+                DecimalNumber(0.5*self.M*self.dl[int(time.get_value()/self.dt)]**2 + 0.5*self.dtheta[int(time.get_value()/self.dt)]**2*self.l[int(time.get_value()/self.dt)]**2*self.m + 0.5*self.dl[int(time.get_value()/self.dt)]**2*self.m + 
+                self.g*(-self.M*self.S + self.M*self.l[int(time.get_value()/self.dt)]-self.l[int(time.get_value()/self.dt)]*self.m*np.sin(self.theta[int(time.get_value()/self.dt)])))
+        ).arrange(RIGHT).next_to(text_T, DOWN, aligned_edge = LEFT)
+        ))
+
+
+        circle_m = Circle().move_to(np.array([-self.l[int(time.get_value()/self.dt)]*np.cos(self.theta[int(time.get_value()/self.dt)]),
+                                              -self.l[int(time.get_value()/self.dt)]*np.sin(self.theta[int(time.get_value()/self.dt)]), 0]))\
+                                                  .scale(0.1).set_color(BLUE)
+        circle_M = Circle().scale(0.5).move_to(np.array([0, self.l[int(time.get_value()/self.dt)]-self.S, 0])).set_color(GRAY)
+        Line_m = Line(origin.get_center(), circle_m.get_center())
+        Line_M = Line(origin.get_center(), circle_M.get_center())
+
+        circle_m.add_updater(lambda m: m.become(
+            Circle().move_to(np.array([-self.l[int(time.get_value()/self.dt)]*np.cos(self.theta[int(time.get_value()/self.dt)]),
+                                       -self.l[int(time.get_value()/self.dt)]*np.sin(self.theta[int(time.get_value()/self.dt)]), 0]))\
+                                           .scale(0.1).set_color(BLUE)
+        ))
+        circle_M.add_updater(lambda m: m.become(
+            Circle().scale(0.5).move_to(np.array([0, self.l[int(time.get_value()/self.dt)]-self.S, 0])).set_color(GRAY)
+        ))
+        Line_m.add_updater(lambda m: m.become(
+            Line(origin.get_center(), circle_m.get_center())
+        ))
+        Line_M.add_updater(lambda m: m.become(
+            Line(origin.get_center(), circle_M.get_center())
+        ))
+
+        self.add(text, origin, circle_m, circle_M, Line_m, Line_M, deci, text_T, text_V, text_E)
+        self.play(time.increment_value, 30, rate_func = linear, run_time = 60)
+
+
 
 # TODO: 绘制负载转速图
 
